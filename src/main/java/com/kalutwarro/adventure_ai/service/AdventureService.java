@@ -73,7 +73,7 @@ Continúa la historia desde el último fragmento:
 
 Incluye siempre al Megalodón y al menos un feature del auto: %s.
 
-Devuelve la respuesta con la escena seguida por una sección 'OPTIONS:' con las opciones, cada una en su línea.
+Devuelve la respuesta con la escena seguida por una sección 'OPTIONS:' con las opciones, cada con un salto de línea \n.
 """.formatted(
                 session.getCurrentTurn(),
                 session.getTotalTurns(),
