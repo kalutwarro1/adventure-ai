@@ -6,6 +6,12 @@
 <body>
 <h1>Tu aventura comienza</h1>
 <p th:text="${story}"></p>
+
+<!-- Opciones ejemplo (luego parse JSON) -->
+<form th:action="@{/aventura/next}" method="post">
+  <input type="text" name="choice" placeholder="Escribe tu decisión"/>
+  <button type="submit">Siguiente</button>
+</form>
 <!-- Más adelante acá pondremos los botones de decisión -->
 </body>
 </html>

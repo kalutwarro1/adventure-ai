@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Generar Aventura</h1>
-<form th:action="@{/aventura/start}" method="post" th:object="${adventureRequest}">
+<form th:action="@{/aventura/start}" method="post" th:object="${adventureRequestModel}">
     Género: <input type="text" th:field="*{genre}"/><br/>
     Protagonistas: <input type="number" th:field="*{protagonists}"/><br/>
     Nombre protagonista: <input type="text" th:field="*{mainCharacterName}"/><br/>

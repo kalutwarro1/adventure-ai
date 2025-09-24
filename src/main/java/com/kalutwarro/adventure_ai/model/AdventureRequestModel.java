@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class AdventureRequest {
+public class AdventureRequestModel {
     @NotBlank
     private String genre; // género
     private int protagonists; // cantidad de protagonistas
