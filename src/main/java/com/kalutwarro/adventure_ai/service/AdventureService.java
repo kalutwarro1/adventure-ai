@@ -36,7 +36,12 @@ public class AdventureService {
                         "description", req.getMainCharacterDescription(), "duration", req.getDuration(),
                         "complexity", req.getComplexity(), "location", req.getLocation()));
 
-        return chatClient.prompt(propmt).call().chatResponse().getResult().getOutput().getText();
+        String response = chatClient.prompt(propmt).call().chatResponse().getResult().getOutput().getText();
+
+        // ✅ Guarda el primer fragmento en el history
+        req.getHistory().add(response);
+
+        return response;
     }
 
     /**
@@ -48,25 +53,9 @@ public class AdventureService {
         session.getChoices().add(chosenOption);
         session.setCurrentTurn(session.getCurrentTurn() + 1);
 
-        // Estado físico/emocional random simple
+        // Estado físico/emocional random simple mood/energy
         session.setEnergy(session.getEnergy() - (int)(Math.random()*10));
         session.setMood(session.getMood() - (int)(Math.random()*5));
-
-        // Prompt dinámico por turno
-        String template = """
-        Eres un narrador de aventuras.
-        Estamos en el turno {turn} de {totalTurns}.
-        La complejidad es {complexity} (2,3 o 5 opciones).
-        Continúa la historia desde el último fragmento:
-        {lastFragment}
-        
-        Incluye siempre al Megalodón y al menos un feature del auto: {feature}.
-        Devuelve la respuesta en JSON:
-        {
-            "story": "...",
-            "options": ["opción1","opción2",...]
-        }
-        """;
 
         String lastFragment = session.getHistory().isEmpty() ?
                 "Inicio de la aventura." : session.getHistory().get(session.getHistory().size()-1);
@@ -74,14 +63,26 @@ public class AdventureService {
         // Seleccionamos feature simple (RAG)
         String feature = "El Megalodón alcanza 320 km/h";
 
-        PromptTemplate prompt = new PromptTemplate(template);
-        prompt.add("turn", String.valueOf(session.getCurrentTurn()));
-        prompt.add("totalTurns", String.valueOf(session.getTotalTurns()));
-        prompt.add("complexity", session.getComplexity());
-        prompt.add("lastFragment", lastFragment);
-        prompt.add("feature", feature);
+        // Prompt dinámico por turno
+        String template = """
+Eres un narrador de aventuras.
+Estamos en el turno %s de %s.
+La complejidad es %s (2,3 o 5 opciones).
+Continúa la historia desde el último fragmento:
+%s
 
-        String jsonResponse = chatClient.prompt(prompt.create()).call().content();
+Incluye siempre al Megalodón y al menos un feature del auto: %s.
+
+Devuelve la respuesta con la escena seguida por una sección 'OPTIONS:' con las opciones, cada una en su línea.
+""".formatted(
+                session.getCurrentTurn(),
+                session.getTotalTurns(),
+                session.getComplexity(),
+                lastFragment,
+                feature
+        );
+
+        String jsonResponse = chatClient.prompt(template).call().chatResponse().getResult().getOutput().getText();
         session.getHistory().add(jsonResponse); // guardamos la historia completa
 
         return jsonResponse;
