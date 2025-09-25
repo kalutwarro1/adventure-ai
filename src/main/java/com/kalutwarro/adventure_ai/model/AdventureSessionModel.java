@@ -22,6 +22,8 @@ public class AdventureSessionModel {
     private int energy = 100; // ejemplo de estado físico
     private int mood = 100;   // ejemplo de estado emocional
 
+    private String currentImage;
+
     public AdventureSessionModel(AdventureRequestModel req) {
         this.genre = req.getGenre();
         this.mainCharacterName = req.getMainCharacterName();
@@ -35,6 +37,7 @@ public class AdventureSessionModel {
             case "larga" -> totalTurns = 20;
             default -> totalTurns = 5;
         }
+        this.currentImage = "";
     }
 
     public boolean isFinished() {

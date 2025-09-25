@@ -345,6 +345,7 @@
     <p class="story-text" th:text="${story}">
       Aquí se mostrará el texto de tu historia épica llena de aventuras, magia y peligros que aguardan en cada esquina del reino...
     </p>
+    <img th:if="${session.currentImage}" th:src="${session.currentImage}" alt="Ilustración de la escena"/>
   </div>
 
   <div class="decision-panel">

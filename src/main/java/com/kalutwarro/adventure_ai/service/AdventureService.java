@@ -4,6 +4,7 @@ import com.kalutwarro.adventure_ai.model.AdventureSessionModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -12,6 +13,9 @@ import java.util.Map;
 public class AdventureService {
 
     private final ChatClient chatClient;
+
+    @Autowired
+    private ImageService imageService;
 
     public AdventureService(ChatClient.Builder builder) {
         this.chatClient = builder.build();
@@ -37,6 +41,12 @@ public class AdventureService {
                         "complexity", req.getComplexity(), "location", req.getLocation()));
 
         String response = chatClient.prompt(propmt).call().chatResponse().getResult().getOutput().getText();
+
+        // Generar imagen con Stable Diffusion
+        String imgPrompt = "Ilustración épica de " + req.getMainCharacterName() + " en el auto Megalodón. Escena: " + response;
+        String imageBase64 = imageService.generateImage(imgPrompt);
+        // Setear Imagen
+        req.setCurrentImage(imageBase64); // guardás la imagen en la sesión
 
         // ✅ Guarda el primer fragmento en el history
         req.getHistory().add(response);
@@ -83,6 +93,13 @@ Devuelve la respuesta con la escena seguida por una sección 'OPTIONS:' con las 
         );
 
         String jsonResponse = chatClient.prompt(template).call().chatResponse().getResult().getOutput().getText();
+
+        // Generar imagen con Stable Diffusion
+        String imgPrompt = "Ilustración épica de " + session.getMainCharacterName() + " en el auto Megalodón. Escena: " + jsonResponse;
+        String imageBase64 = imageService.generateImage(imgPrompt);
+        // Setear Imagen
+        session.setCurrentImage(imageBase64); // guardás la imagen en la sesión
+
         session.getHistory().add(jsonResponse); // guardamos la historia completa
 
         return jsonResponse;
