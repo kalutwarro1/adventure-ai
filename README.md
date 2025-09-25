@@ -92,7 +92,7 @@
 
 La aplicación incluye integración completa con **Stable Diffusion WebUI** para generar imágenes automáticamente en cada turno usando el prompt response generado por el LLM.
 
-IMPORTANTE: Existe una variable en el archivo application.properties que habilita o deshabilita la generación de imágenes.
+IMPORTANTE: Existe una variable en el archivo application.properties "adventure.images.enabled" que permite habilitar o deshabilita la generación de imágenes.
 
 **Requisitos obligatorios:**
 * Instalar y ejecutar **Stable Diffusion WebUI** localmente
