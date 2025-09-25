@@ -1,8 +1,9 @@
 # Spring AI Adventure
 
-**Spring AI Adventure** es una aplicación web que permite generar y jugar una aventura interactiva "elige tu propia aventura" utilizando modelos de lenguaje (LLM) y generación de imágenes. Está construida con **Spring Boot**, integrando **Spring AI** y **Ollama** para la generación de texto, y opcionalmente **Stable Diffusion WebUI** para imágenes.
+**Spring AI Adventure** es una aplicación web que permite generar y jugar una aventura interactiva "elige tu propia aventura" utilizando modelos de lenguaje (LLM) y generación de imágenes. Está construida con **Spring Boot**, integrando **Spring AI + Thymeleaf** y **Ollama** para la generación de texto, y opcionalmente **Stable Diffusion WebUI** para imágenes.
 
 ![spring ai adventure](img/Screenshot_1.jpg)
+![spring ai adventure](img/Screenshot_5.jpg)
 
 ---
 
@@ -26,8 +27,9 @@
 
 * Java 17+
 * Maven 3+
+* Python 3.10 para dependencias de generación de imágenes(opcional).
 * Ollama instalado y corriendo (localhost:11434)
-* Modelo Mistral descargado: `ollama pull mistral`
+* Modelo LLM descargado. Se sugiere gemma:2b para puebas o mistral. Ejemplo: `ollama pull mistral`
 * Navegador web moderno
 
 ---
@@ -86,13 +88,21 @@
 
 ---
 
-## Generación de imágenes (opcional)
+## Generación de imágenes(opcional)
 
-Si deseas enriquecer la historia con imágenes:
+La aplicación incluye integración completa con **Stable Diffusion WebUI** para generar imágenes automáticamente en cada turno usando el prompt response generado por el LLM.
 
-* Instalar y correr **Stable Diffusion WebUI**.
-* Configurar la integración en el backend.
-* Cada turno puede generar imágenes del escenario o personaje.
+IMPORTANTE: Existe una variable en el archivo application.properties "adventure.images.enabled" que permite habilitar o deshabilita la generación de imágenes.
+
+**Requisitos obligatorios:**
+* Instalar y ejecutar **Stable Diffusion WebUI** localmente
+* Mantener la instancia local levantada para el uso de la API local con Spring
+* Contar con GPU NVDIA
+
+**Funcionalidad:**
+* Cada turno genera automáticamente imágenes del escenario o personaje
+* Las imágenes se crean basadas en el contexto y descripción del turno actual
+* La visualización de las imágenes generadas es **opcional** (puede configurarse para mostrar o no)
 
 ---
 
