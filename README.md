@@ -1,6 +1,6 @@
 # Spring AI Adventure
 
-**Spring AI Adventure** es una aplicación web que permite generar y jugar una aventura interactiva "elige tu propia aventura" utilizando modelos de lenguaje (LLM) y generación de imágenes. Está construida con **Spring Boot**, integrando **Spring AI** y **Ollama** para la generación de texto, y opcionalmente **Stable Diffusion WebUI** para imágenes.
+**Spring AI Adventure** es una aplicación web que permite generar y jugar una aventura interactiva "elige tu propia aventura" utilizando modelos de lenguaje (LLM) y generación de imágenes. Está construida con **Spring Boot**, integrando **Spring AI + Thymeleaf** y **Ollama** para la generación de texto, y opcionalmente **Stable Diffusion WebUI** para imágenes.
 
 ![spring ai adventure](img/Screenshot_1.jpg)
 ![spring ai adventure](img/Screenshot_5.jpg)
