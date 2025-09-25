@@ -5,6 +5,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -16,6 +17,9 @@ public class AdventureService {
 
     @Autowired
     private ImageService imageService;
+
+    @Value("${adventure.images.enabled:false}")
+    private boolean imagesEnabled;
 
     public AdventureService(ChatClient.Builder builder) {
         this.chatClient = builder.build();
@@ -42,16 +46,22 @@ public class AdventureService {
 
         String response = chatClient.prompt(propmt).call().chatResponse().getResult().getOutput().getText();
 
-        // Generar imagen con Stable Diffusion
-        String imgPrompt = "Ilustración épica de " + req.getMainCharacterName() + " en el auto Megalodón. Escena: " + response;
-        String imageBase64 = imageService.generateImage(imgPrompt);
-        // Setear Imagen
-        req.setCurrentImage(imageBase64); // guardás la imagen en la sesión
+        if(imagesEnabled){
+            this.generateImage(req, response);
+        }
 
         // ✅ Guarda el primer fragmento en el history
         req.getHistory().add(response);
 
         return response;
+    }
+
+    // Generar imagen con Stable Diffusion
+    private void generateImage(AdventureSessionModel req, String response) {
+        String imgPrompt = "Ilustración épica de " + req.getMainCharacterName() + " en el auto Megalodón. Escena: " + response;
+        String imageBase64 = imageService.generateImage(imgPrompt);
+        // Setear Imagen
+        req.setCurrentImage(imageBase64);
     }
 
     /**
@@ -94,11 +104,9 @@ Devuelve la respuesta con la escena seguida por una sección 'OPTIONS:' con las 
 
         String jsonResponse = chatClient.prompt(template).call().chatResponse().getResult().getOutput().getText();
 
-        // Generar imagen con Stable Diffusion
-        String imgPrompt = "Ilustración épica de " + session.getMainCharacterName() + " en el auto Megalodón. Escena: " + jsonResponse;
-        String imageBase64 = imageService.generateImage(imgPrompt);
-        // Setear Imagen
-        session.setCurrentImage(imageBase64); // guardás la imagen en la sesión
+        if(imagesEnabled){
+            this.generateImage(session, jsonResponse);
+        }
 
         session.getHistory().add(jsonResponse); // guardamos la historia completa
 
